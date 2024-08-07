@@ -15,7 +15,9 @@ interface ParsableTx {
 export declare function getParsedTx<T>(data: ParsableTx): T;
 export declare class TransactionsStore {
     network: string;
-    transactionData: Record<string, TransactionInfo>;
+    transactionData: Record<string, TransactionInfo & {
+        loading?: boolean;
+    }>;
     constructor(network: string, customData?: Record<string, TransactionInfo>);
     loadTransactionData(txHash: string): Promise<void>;
     loadTxData(): Promise<void>;

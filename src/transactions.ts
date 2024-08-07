@@ -23,11 +23,11 @@ export function getParsedTx<T>(data: ParsableTx): T {
     const tx = CosmosTx.decode(base64ToUint8Array(data.rawData));
     if (data.type === "/hyle.zktx.v1.MsgRegisterContract") {
         return MsgRegisterContract.decode(
-            tx!.body!.messages.filter((x: any) => x.typeUrl === "/hyle.zktx.v1.MsgRegisterContract")[0].value,
+            tx!.body!.messages.filter((x: any) => x.typeUrl === "/hyle.zktx.v1.MsgRegisterContract")[0].value
         ) as any as T;
     } else if (data.type === "/hyle.zktx.v1.MsgPublishPayloads") {
         return MsgPublishPayloads.decode(
-            tx!.body!.messages.filter((x: any) => x.typeUrl === "/hyle.zktx.v1.MsgPublishPayloads")[0].value,
+            tx!.body!.messages.filter((x: any) => x.typeUrl === "/hyle.zktx.v1.MsgPublishPayloads")[0].value
         ) as any as T;
     }
     return undefined as any;
@@ -35,7 +35,7 @@ export function getParsedTx<T>(data: ParsableTx): T {
 
 export class TransactionsStore {
     network: string;
-    transactionData: Record<string, TransactionInfo>;
+    transactionData: Record<string, TransactionInfo & { loading?: boolean }>;
 
     constructor(network: string, customData?: Record<string, TransactionInfo>) {
         this.network = network;
@@ -44,6 +44,8 @@ export class TransactionsStore {
 
     async loadTransactionData(txHash: string) {
         if (this.transactionData[txHash]?.type) return; // use type as a proxy for full loading (see below)
+        if (this.transactionData[txHash]?.loading) return;
+        this.transactionData[txHash].loading = true;
 
         const response = fetch(`${getNetworkRpcUrl(this.network)}/tx?hash=0x${txHash}`);
         const settlement = fetch(`${getNetworkApiUrl(this.network)}/hyle/zktx/v1/settlement/${txHash}`);
@@ -75,6 +77,7 @@ export class TransactionsStore {
             if (this.transactionData[txHash].status === "sequenced") this.transactionData[txHash].status = "success";
             // TODO settlement ?
         }
+        this.transactionData[txHash].loading = false;
     }
 
     async loadTxData() {
@@ -93,7 +96,9 @@ export class TransactionsStore {
     async loadContractTxs(contract_name: string) {
         // TODO: load register TXs as well
         const response = await fetch(
-            `${getNetworkRpcUrl(this.network)}/tx_search?query="hyle.zktx.v1.EventPayload.contract_name='\\"${contract_name}\\"'"&page=1&per_page=50&order_by="asc"&match_events=true`,
+            `${getNetworkRpcUrl(
+                this.network
+            )}/tx_search?query="hyle.zktx.v1.EventPayload.contract_name='\\"${contract_name}\\"'"&page=1&per_page=50&order_by="asc"&match_events=true`
         );
         const txs = /*transactions.value = */ (await response.json()).result.txs;
         for (const tx of txs) {
