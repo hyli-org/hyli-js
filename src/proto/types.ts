@@ -33,6 +33,10 @@ export interface Contract {
   programId: Uint8Array;
   /** Recap of the current contract state */
   stateDigest: Uint8Array;
+  /** Hash of the next TX to settle, in order */
+  nextTxToSettle: Uint8Array;
+  /** Latest tx received to settle, for optimisation */
+  latestTxReceived: Uint8Array;
 }
 
 /** PayloadMetadata is the transient state we need to keep to settle payloads */
@@ -43,12 +47,16 @@ export interface PayloadMetadata {
   identity: string;
   /** Contract name to settle */
   contractName: string;
+  /** The initial state of the contract */
+  initialState: Uint8Array;
   /** The next state to transition to */
   nextState: Uint8Array;
   /** If this payload was verified */
   verified: boolean;
   /** If this is a success or failure */
   success: boolean;
+  /** Next TX hash in the list of TX to settle */
+  nextTxHash: Uint8Array;
 }
 
 /** TxTimeout is a list of TXs used to timeout */
@@ -275,7 +283,13 @@ export const GenesisState_ContractsEntry = {
 };
 
 function createBaseContract(): Contract {
-  return { verifier: "", programId: new Uint8Array(0), stateDigest: new Uint8Array(0) };
+  return {
+    verifier: "",
+    programId: new Uint8Array(0),
+    stateDigest: new Uint8Array(0),
+    nextTxToSettle: new Uint8Array(0),
+    latestTxReceived: new Uint8Array(0),
+  };
 }
 
 export const Contract = {
@@ -288,6 +302,12 @@ export const Contract = {
     }
     if (message.stateDigest.length !== 0) {
       writer.uint32(26).bytes(message.stateDigest);
+    }
+    if (message.nextTxToSettle.length !== 0) {
+      writer.uint32(34).bytes(message.nextTxToSettle);
+    }
+    if (message.latestTxReceived.length !== 0) {
+      writer.uint32(42).bytes(message.latestTxReceived);
     }
     return writer;
   },
@@ -320,6 +340,20 @@ export const Contract = {
 
           message.stateDigest = reader.bytes();
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.nextTxToSettle = reader.bytes();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.latestTxReceived = reader.bytes();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -334,6 +368,8 @@ export const Contract = {
       verifier: isSet(object.verifier) ? globalThis.String(object.verifier) : "",
       programId: isSet(object.programId) ? bytesFromBase64(object.programId) : new Uint8Array(0),
       stateDigest: isSet(object.stateDigest) ? bytesFromBase64(object.stateDigest) : new Uint8Array(0),
+      nextTxToSettle: isSet(object.nextTxToSettle) ? bytesFromBase64(object.nextTxToSettle) : new Uint8Array(0),
+      latestTxReceived: isSet(object.latestTxReceived) ? bytesFromBase64(object.latestTxReceived) : new Uint8Array(0),
     };
   },
 
@@ -348,6 +384,12 @@ export const Contract = {
     if (message.stateDigest.length !== 0) {
       obj.stateDigest = base64FromBytes(message.stateDigest);
     }
+    if (message.nextTxToSettle.length !== 0) {
+      obj.nextTxToSettle = base64FromBytes(message.nextTxToSettle);
+    }
+    if (message.latestTxReceived.length !== 0) {
+      obj.latestTxReceived = base64FromBytes(message.latestTxReceived);
+    }
     return obj;
   },
 
@@ -359,6 +401,8 @@ export const Contract = {
     message.verifier = object.verifier ?? "";
     message.programId = object.programId ?? new Uint8Array(0);
     message.stateDigest = object.stateDigest ?? new Uint8Array(0);
+    message.nextTxToSettle = object.nextTxToSettle ?? new Uint8Array(0);
+    message.latestTxReceived = object.latestTxReceived ?? new Uint8Array(0);
     return message;
   },
 };
@@ -368,9 +412,11 @@ function createBasePayloadMetadata(): PayloadMetadata {
     payloadHash: new Uint8Array(0),
     identity: "",
     contractName: "",
+    initialState: new Uint8Array(0),
     nextState: new Uint8Array(0),
     verified: false,
     success: false,
+    nextTxHash: new Uint8Array(0),
   };
 }
 
@@ -385,14 +431,20 @@ export const PayloadMetadata = {
     if (message.contractName !== "") {
       writer.uint32(26).string(message.contractName);
     }
+    if (message.initialState.length !== 0) {
+      writer.uint32(34).bytes(message.initialState);
+    }
     if (message.nextState.length !== 0) {
-      writer.uint32(34).bytes(message.nextState);
+      writer.uint32(42).bytes(message.nextState);
     }
     if (message.verified !== false) {
-      writer.uint32(40).bool(message.verified);
+      writer.uint32(48).bool(message.verified);
     }
     if (message.success !== false) {
-      writer.uint32(48).bool(message.success);
+      writer.uint32(56).bool(message.success);
+    }
+    if (message.nextTxHash.length !== 0) {
+      writer.uint32(66).bytes(message.nextTxHash);
     }
     return writer;
   },
@@ -430,21 +482,35 @@ export const PayloadMetadata = {
             break;
           }
 
-          message.nextState = reader.bytes();
+          message.initialState = reader.bytes();
           continue;
         case 5:
-          if (tag !== 40) {
+          if (tag !== 42) {
             break;
           }
 
-          message.verified = reader.bool();
+          message.nextState = reader.bytes();
           continue;
         case 6:
           if (tag !== 48) {
             break;
           }
 
+          message.verified = reader.bool();
+          continue;
+        case 7:
+          if (tag !== 56) {
+            break;
+          }
+
           message.success = reader.bool();
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.nextTxHash = reader.bytes();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -460,9 +526,11 @@ export const PayloadMetadata = {
       payloadHash: isSet(object.payloadHash) ? bytesFromBase64(object.payloadHash) : new Uint8Array(0),
       identity: isSet(object.identity) ? globalThis.String(object.identity) : "",
       contractName: isSet(object.contractName) ? globalThis.String(object.contractName) : "",
+      initialState: isSet(object.initialState) ? bytesFromBase64(object.initialState) : new Uint8Array(0),
       nextState: isSet(object.nextState) ? bytesFromBase64(object.nextState) : new Uint8Array(0),
       verified: isSet(object.verified) ? globalThis.Boolean(object.verified) : false,
       success: isSet(object.success) ? globalThis.Boolean(object.success) : false,
+      nextTxHash: isSet(object.nextTxHash) ? bytesFromBase64(object.nextTxHash) : new Uint8Array(0),
     };
   },
 
@@ -477,6 +545,9 @@ export const PayloadMetadata = {
     if (message.contractName !== "") {
       obj.contractName = message.contractName;
     }
+    if (message.initialState.length !== 0) {
+      obj.initialState = base64FromBytes(message.initialState);
+    }
     if (message.nextState.length !== 0) {
       obj.nextState = base64FromBytes(message.nextState);
     }
@@ -485,6 +556,9 @@ export const PayloadMetadata = {
     }
     if (message.success !== false) {
       obj.success = message.success;
+    }
+    if (message.nextTxHash.length !== 0) {
+      obj.nextTxHash = base64FromBytes(message.nextTxHash);
     }
     return obj;
   },
@@ -497,9 +571,11 @@ export const PayloadMetadata = {
     message.payloadHash = object.payloadHash ?? new Uint8Array(0);
     message.identity = object.identity ?? "";
     message.contractName = object.contractName ?? "";
+    message.initialState = object.initialState ?? new Uint8Array(0);
     message.nextState = object.nextState ?? new Uint8Array(0);
     message.verified = object.verified ?? false;
     message.success = object.success ?? false;
+    message.nextTxHash = object.nextTxHash ?? new Uint8Array(0);
     return message;
   },
 };

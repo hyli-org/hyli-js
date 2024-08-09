@@ -1,9 +1,16 @@
 export declare function setupCosmos(address: string): Promise<void>;
 export declare function broadcastProofTx(hash: string, payloadIndex: number, contractName: string, proof: string): Promise<import("@cosmjs/stargate").DeliverTxResponse>;
-export declare function broadcastPayloadTx(payloads: {
+export declare function broadcastPayloadTx(identity: string, payloads: {
     contractName: string;
-    payload: string;
+    data: string;
 }[]): Promise<import("@cosmjs/stargate").DeliverTxResponse>;
+export declare function checkTxesStatus(hashes: string[]): Promise<{
+    status: string;
+    error: string;
+} | {
+    status: string;
+    error?: undefined;
+}>;
 export declare function checkTxStatus(hash: string): Promise<{
     status: string;
     error: string;

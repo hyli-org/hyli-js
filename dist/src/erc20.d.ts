@@ -1,6 +1,5 @@
 import { MsgPublishPayloads } from "./proto/tx";
 import { TransactionInfo } from "./transactions";
-export declare function deserByteArray(data: string[]): string;
 export declare class Erc20Parser {
     contractName: string;
     balancesSettled: Record<string, number>;

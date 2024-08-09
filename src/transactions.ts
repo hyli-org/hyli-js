@@ -1,5 +1,5 @@
 import { getNetworkApiUrl, getNetworkRpcUrl } from "./network";
-import { MsgPublishPayloads, MsgRegisterContract } from "./proto/tx";
+import { MsgPublishPayloadProof, MsgPublishPayloads, MsgRegisterContract } from "./proto/tx";
 import { Tx as CosmosTx } from "cosmjs-types/cosmos/tx/v1beta1/tx";
 import { base64ToUint8Array } from "@/utils";
 
@@ -29,6 +29,10 @@ export function getParsedTx<T>(data: ParsableTx): T {
         return MsgPublishPayloads.decode(
             tx!.body!.messages.filter((x: any) => x.typeUrl === "/hyle.zktx.v1.MsgPublishPayloads")[0].value
         ) as any as T;
+    } else if (data.type === "/hyle.zktx.v1.MsgPublishPayloadProof") {
+        return MsgPublishPayloadProof.decode(
+            tx!.body!.messages.filter((x: any) => x.typeUrl === "/hyle.zktx.v1.MsgPublishPayloadProof")[0].value
+        ) as any as T;
     }
     return undefined as any;
 }
@@ -43,6 +47,7 @@ export class TransactionsStore {
     }
 
     async loadTransactionData(txHash: string) {
+        if (!this.transactionData[txHash]) this.transactionData[txHash] = {} as any;
         if (this.transactionData[txHash]?.type) return; // use type as a proxy for full loading (see below)
         if (this.transactionData[txHash]?.loading) return;
         this.transactionData[txHash].loading = true;

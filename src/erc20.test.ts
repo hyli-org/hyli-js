@@ -1,22 +1,7 @@
 //[7 0 112568767309172 6 0 155498244330488045306850287589664177200672003224113 21 1000]
 
 import { test, expect } from "bun:test";
-import { Erc20Parser, deserByteArray } from "./erc20";
-
-test("deserByteArray", () => {
-    expect(deserByteArray(["0 0 0"])).toBe("");
-    expect(deserByteArray(["0", "112568767309172", "6"])).toBe("faucet");
-    expect(deserByteArray(["0", "155498244330488045306850287589664177200672003224113", "21"])).toBe("jenny.ecdsa_secp256r1");
-    expect(
-        deserByteArray([
-            "2",
-            "155498244330488045306850287589664177200672003224113",
-            "155498244330488045306850287589664177200672003224113",
-            "155498244330488045306850287589664177200672003224113",
-            "21",
-        ]),
-    ).toBe("jenny.ecdsa_secp256r1jenny.ecdsa_secp256r1jenny.ecdsa_secp256r1");
-});
+import { Erc20Parser } from "./erc20";
 
 test("Process pending and settled correctly", () => {
     const contract = new Erc20Parser();

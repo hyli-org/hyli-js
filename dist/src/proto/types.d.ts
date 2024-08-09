@@ -23,6 +23,10 @@ export interface Contract {
     programId: Uint8Array;
     /** Recap of the current contract state */
     stateDigest: Uint8Array;
+    /** Hash of the next TX to settle, in order */
+    nextTxToSettle: Uint8Array;
+    /** Latest tx received to settle, for optimisation */
+    latestTxReceived: Uint8Array;
 }
 /** PayloadMetadata is the transient state we need to keep to settle payloads */
 export interface PayloadMetadata {
@@ -32,12 +36,16 @@ export interface PayloadMetadata {
     identity: string;
     /** Contract name to settle */
     contractName: string;
+    /** The initial state of the contract */
+    initialState: Uint8Array;
     /** The next state to transition to */
     nextState: Uint8Array;
     /** If this payload was verified */
     verified: boolean;
     /** If this is a success or failure */
     success: boolean;
+    /** Next TX hash in the list of TX to settle */
+    nextTxHash: Uint8Array;
 }
 /** TxTimeout is a list of TXs used to timeout */
 export interface TxTimeout {
@@ -64,6 +72,8 @@ export declare const GenesisState: {
                 verifier?: string | undefined;
                 programId?: Uint8Array | undefined;
                 stateDigest?: Uint8Array | undefined;
+                nextTxToSettle?: Uint8Array | undefined;
+                latestTxReceived?: Uint8Array | undefined;
             } | undefined;
         } | undefined;
     } & {
@@ -73,16 +83,22 @@ export declare const GenesisState: {
                 verifier?: string | undefined;
                 programId?: Uint8Array | undefined;
                 stateDigest?: Uint8Array | undefined;
+                nextTxToSettle?: Uint8Array | undefined;
+                latestTxReceived?: Uint8Array | undefined;
             } | undefined;
         } & {
             [x: string]: ({
                 verifier?: string | undefined;
                 programId?: Uint8Array | undefined;
                 stateDigest?: Uint8Array | undefined;
+                nextTxToSettle?: Uint8Array | undefined;
+                latestTxReceived?: Uint8Array | undefined;
             } & {
                 verifier?: string | undefined;
                 programId?: Uint8Array | undefined;
                 stateDigest?: Uint8Array | undefined;
+                nextTxToSettle?: Uint8Array | undefined;
+                latestTxReceived?: Uint8Array | undefined;
             } & { [K_1 in Exclude<keyof I["contracts"][string], keyof Contract>]: never; }) | undefined;
         } & { [K_2 in Exclude<keyof I["contracts"], string | number>]: never; }) | undefined;
     } & { [K_3 in Exclude<keyof I, keyof GenesisState>]: never; }>(base?: I): GenesisState;
@@ -93,6 +109,8 @@ export declare const GenesisState: {
                 verifier?: string | undefined;
                 programId?: Uint8Array | undefined;
                 stateDigest?: Uint8Array | undefined;
+                nextTxToSettle?: Uint8Array | undefined;
+                latestTxReceived?: Uint8Array | undefined;
             } | undefined;
         } | undefined;
     } & {
@@ -102,16 +120,22 @@ export declare const GenesisState: {
                 verifier?: string | undefined;
                 programId?: Uint8Array | undefined;
                 stateDigest?: Uint8Array | undefined;
+                nextTxToSettle?: Uint8Array | undefined;
+                latestTxReceived?: Uint8Array | undefined;
             } | undefined;
         } & {
             [x: string]: ({
                 verifier?: string | undefined;
                 programId?: Uint8Array | undefined;
                 stateDigest?: Uint8Array | undefined;
+                nextTxToSettle?: Uint8Array | undefined;
+                latestTxReceived?: Uint8Array | undefined;
             } & {
                 verifier?: string | undefined;
                 programId?: Uint8Array | undefined;
                 stateDigest?: Uint8Array | undefined;
+                nextTxToSettle?: Uint8Array | undefined;
+                latestTxReceived?: Uint8Array | undefined;
             } & { [K_5 in Exclude<keyof I_1["contracts"][string], keyof Contract>]: never; }) | undefined;
         } & { [K_6 in Exclude<keyof I_1["contracts"], string | number>]: never; }) | undefined;
     } & { [K_7 in Exclude<keyof I_1, keyof GenesisState>]: never; }>(object: I_1): GenesisState;
@@ -127,6 +151,8 @@ export declare const GenesisState_ContractsEntry: {
             verifier?: string | undefined;
             programId?: Uint8Array | undefined;
             stateDigest?: Uint8Array | undefined;
+            nextTxToSettle?: Uint8Array | undefined;
+            latestTxReceived?: Uint8Array | undefined;
         } | undefined;
     } & {
         key?: string | undefined;
@@ -134,10 +160,14 @@ export declare const GenesisState_ContractsEntry: {
             verifier?: string | undefined;
             programId?: Uint8Array | undefined;
             stateDigest?: Uint8Array | undefined;
+            nextTxToSettle?: Uint8Array | undefined;
+            latestTxReceived?: Uint8Array | undefined;
         } & {
             verifier?: string | undefined;
             programId?: Uint8Array | undefined;
             stateDigest?: Uint8Array | undefined;
+            nextTxToSettle?: Uint8Array | undefined;
+            latestTxReceived?: Uint8Array | undefined;
         } & { [K in Exclude<keyof I["value"], keyof Contract>]: never; }) | undefined;
     } & { [K_1 in Exclude<keyof I, keyof GenesisState_ContractsEntry>]: never; }>(base?: I): GenesisState_ContractsEntry;
     fromPartial<I_1 extends {
@@ -146,6 +176,8 @@ export declare const GenesisState_ContractsEntry: {
             verifier?: string | undefined;
             programId?: Uint8Array | undefined;
             stateDigest?: Uint8Array | undefined;
+            nextTxToSettle?: Uint8Array | undefined;
+            latestTxReceived?: Uint8Array | undefined;
         } | undefined;
     } & {
         key?: string | undefined;
@@ -153,10 +185,14 @@ export declare const GenesisState_ContractsEntry: {
             verifier?: string | undefined;
             programId?: Uint8Array | undefined;
             stateDigest?: Uint8Array | undefined;
+            nextTxToSettle?: Uint8Array | undefined;
+            latestTxReceived?: Uint8Array | undefined;
         } & {
             verifier?: string | undefined;
             programId?: Uint8Array | undefined;
             stateDigest?: Uint8Array | undefined;
+            nextTxToSettle?: Uint8Array | undefined;
+            latestTxReceived?: Uint8Array | undefined;
         } & { [K_2 in Exclude<keyof I_1["value"], keyof Contract>]: never; }) | undefined;
     } & { [K_3 in Exclude<keyof I_1, keyof GenesisState_ContractsEntry>]: never; }>(object: I_1): GenesisState_ContractsEntry;
 };
@@ -169,19 +205,27 @@ export declare const Contract: {
         verifier?: string | undefined;
         programId?: Uint8Array | undefined;
         stateDigest?: Uint8Array | undefined;
+        nextTxToSettle?: Uint8Array | undefined;
+        latestTxReceived?: Uint8Array | undefined;
     } & {
         verifier?: string | undefined;
         programId?: Uint8Array | undefined;
         stateDigest?: Uint8Array | undefined;
+        nextTxToSettle?: Uint8Array | undefined;
+        latestTxReceived?: Uint8Array | undefined;
     } & { [K in Exclude<keyof I, keyof Contract>]: never; }>(base?: I): Contract;
     fromPartial<I_1 extends {
         verifier?: string | undefined;
         programId?: Uint8Array | undefined;
         stateDigest?: Uint8Array | undefined;
+        nextTxToSettle?: Uint8Array | undefined;
+        latestTxReceived?: Uint8Array | undefined;
     } & {
         verifier?: string | undefined;
         programId?: Uint8Array | undefined;
         stateDigest?: Uint8Array | undefined;
+        nextTxToSettle?: Uint8Array | undefined;
+        latestTxReceived?: Uint8Array | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof Contract>]: never; }>(object: I_1): Contract;
 };
 export declare const PayloadMetadata: {
@@ -193,31 +237,39 @@ export declare const PayloadMetadata: {
         payloadHash?: Uint8Array | undefined;
         identity?: string | undefined;
         contractName?: string | undefined;
+        initialState?: Uint8Array | undefined;
         nextState?: Uint8Array | undefined;
         verified?: boolean | undefined;
         success?: boolean | undefined;
+        nextTxHash?: Uint8Array | undefined;
     } & {
         payloadHash?: Uint8Array | undefined;
         identity?: string | undefined;
         contractName?: string | undefined;
+        initialState?: Uint8Array | undefined;
         nextState?: Uint8Array | undefined;
         verified?: boolean | undefined;
         success?: boolean | undefined;
+        nextTxHash?: Uint8Array | undefined;
     } & { [K in Exclude<keyof I, keyof PayloadMetadata>]: never; }>(base?: I): PayloadMetadata;
     fromPartial<I_1 extends {
         payloadHash?: Uint8Array | undefined;
         identity?: string | undefined;
         contractName?: string | undefined;
+        initialState?: Uint8Array | undefined;
         nextState?: Uint8Array | undefined;
         verified?: boolean | undefined;
         success?: boolean | undefined;
+        nextTxHash?: Uint8Array | undefined;
     } & {
         payloadHash?: Uint8Array | undefined;
         identity?: string | undefined;
         contractName?: string | undefined;
+        initialState?: Uint8Array | undefined;
         nextState?: Uint8Array | undefined;
         verified?: boolean | undefined;
         success?: boolean | undefined;
+        nextTxHash?: Uint8Array | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof PayloadMetadata>]: never; }>(object: I_1): PayloadMetadata;
 };
 export declare const TxTimeout: {

@@ -4,7 +4,7 @@ export function hexToUint8Array(hex: string): Uint8Array {
     const len = evenHex.length / 2;
     const arr = new Uint8Array(len);
     for (let i = 0; i < len; i++) {
-        arr[i] = parseInt(evenHex.slice(i * 2, 2), 16);
+        arr[i] = parseInt(evenHex.slice(i * 2, (i + 1) * 2), 16);
     }
     return arr;
 }

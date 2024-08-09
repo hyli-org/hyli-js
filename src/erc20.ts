@@ -1,27 +1,6 @@
+import { deserByteArray } from "./ByteArray";
 import { MsgPublishPayloads } from "./proto/tx";
 import { getParsedTx, TransactionInfo } from "./transactions";
-
-function decimalToAscii(encodedString: string) {
-    let asHex = BigInt(encodedString).toString(16);
-    // Pad with 0s
-    if (asHex.length % 2 !== 0) asHex = "0" + asHex;
-    const asBytes = [];
-    for (let i = 0; i < asHex.length; i += 2) {
-        asBytes.push(String.fromCharCode(parseInt(asHex.slice(i, i + 2), 16)));
-    }
-    return asBytes.join("");
-}
-
-export function deserByteArray(data: string[]) {
-    const words = +data[0];
-    const remaining = +data.slice(-1);
-    let result = "";
-    for (let i = 1; i <= words; i++) {
-        result += decimalToAscii(data[i]);
-    }
-    if (remaining > 0) result += decimalToAscii(data.slice(-2, -1)[0]);
-    return result;
-}
 
 export class Erc20Parser {
     contractName = "erc20";

@@ -6,7 +6,7 @@ import { TxRaw } from "cosmjs-types/cosmos/tx/v1beta1/tx";
 // common types but don't rely on those being available. You need to set up your own code generator
 // for the types you care about. How this is done should be documented, but is not yet:
 // https://github.com/cosmos/cosmjs/issues/640
-import { MsgPublishPayloadProof, MsgRegisterContract } from "./proto/tx.ts";
+import { MsgPublishPayloads, MsgPublishPayloadProof, MsgRegisterContract } from "./proto/tx.ts";
 import { getNetworkApiUrl } from "./network.ts";
 import { hexToUint8Array, uint8ArrayToBase64 } from "./utils.ts";
 
@@ -30,6 +30,7 @@ export async function setupCosmos(address: string) {
     const rpcEndpoint = address;
     client = await SigningStargateClient.connectWithSigner(rpcEndpoint, wallet, {
         registry: new Registry([
+            ["/hyle.zktx.v1.MsgPublishPayloads", MsgPublishPayloads],
             ["/hyle.zktx.v1.MsgPublishPayloadProof", MsgPublishPayloadProof],
             ["/hyle.zktx.v1.MsgRegisterContract", MsgRegisterContract],
         ]),
@@ -65,10 +66,11 @@ export async function broadcastProofTx(hash: string, payloadIndex: number, contr
     return await client.broadcastTx(Uint8Array.from(TxRaw.encode(signedTx).finish()));
 }
 
-export async function broadcastPayloadTx(payloads: { contractName: string; payload: string }[]) {
+export async function broadcastPayloadTx(identity: string, payloads: { contractName: string; data: string }[]) {
     const msgAny = {
         typeUrl: "/hyle.zktx.v1.MsgPublishPayloads",
         value: {
+            identity,
             payloads,
         },
     };
@@ -88,6 +90,18 @@ export async function broadcastPayloadTx(payloads: { contractName: string; paylo
     });
     // For now our transactions are always included.
     return await client.broadcastTx(Uint8Array.from(TxRaw.encode(signedTx).finish()));
+}
+
+export async function checkTxesStatus(hashes: string[]) {
+    for (const hash of hashes) {
+        const resp2 = await checkTxStatus(hash);
+        if (resp2.status == "failed") {
+            return resp2;
+        }
+    }
+    return {
+        status: "success",
+    };
 }
 
 export async function checkTxStatus(hash: string) {
