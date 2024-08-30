@@ -9,10 +9,10 @@ import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "hyle.zktx.v1";
 
-/** Payload is a blob */
-export interface Payload {
+/** Payloads is the blob */
+export interface Payloads {
   /** Name of target contract */
-  contractName: string;
+  contractsName: string[];
   /** Payload data */
   data: Uint8Array;
 }
@@ -21,8 +21,8 @@ export interface Payload {
 export interface MsgPublishPayloads {
   /** Identity is the identity of the TX sender */
   identity: string;
-  /** list of payloads */
-  payloads: Payload[];
+  /** Payload containing data and list of contrats */
+  payloads: Payloads | undefined;
 }
 
 /** No response */
@@ -63,14 +63,14 @@ export interface MsgRegisterContract {
 export interface MsgRegisterContractResponse {
 }
 
-function createBasePayload(): Payload {
-  return { contractName: "", data: new Uint8Array(0) };
+function createBasePayloads(): Payloads {
+  return { contractsName: [], data: new Uint8Array(0) };
 }
 
-export const Payload = {
-  encode(message: Payload, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.contractName !== "") {
-      writer.uint32(10).string(message.contractName);
+export const Payloads = {
+  encode(message: Payloads, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.contractsName) {
+      writer.uint32(10).string(v!);
     }
     if (message.data.length !== 0) {
       writer.uint32(18).bytes(message.data);
@@ -78,10 +78,10 @@ export const Payload = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Payload {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Payloads {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasePayload();
+    const message = createBasePayloads();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -90,7 +90,7 @@ export const Payload = {
             break;
           }
 
-          message.contractName = reader.string();
+          message.contractsName.push(reader.string());
           continue;
         case 2:
           if (tag !== 18) {
@@ -108,17 +108,19 @@ export const Payload = {
     return message;
   },
 
-  fromJSON(object: any): Payload {
+  fromJSON(object: any): Payloads {
     return {
-      contractName: isSet(object.contractName) ? globalThis.String(object.contractName) : "",
+      contractsName: globalThis.Array.isArray(object?.contractsName)
+        ? object.contractsName.map((e: any) => globalThis.String(e))
+        : [],
       data: isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array(0),
     };
   },
 
-  toJSON(message: Payload): unknown {
+  toJSON(message: Payloads): unknown {
     const obj: any = {};
-    if (message.contractName !== "") {
-      obj.contractName = message.contractName;
+    if (message.contractsName?.length) {
+      obj.contractsName = message.contractsName;
     }
     if (message.data.length !== 0) {
       obj.data = base64FromBytes(message.data);
@@ -126,19 +128,19 @@ export const Payload = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<Payload>, I>>(base?: I): Payload {
-    return Payload.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<Payloads>, I>>(base?: I): Payloads {
+    return Payloads.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<Payload>, I>>(object: I): Payload {
-    const message = createBasePayload();
-    message.contractName = object.contractName ?? "";
+  fromPartial<I extends Exact<DeepPartial<Payloads>, I>>(object: I): Payloads {
+    const message = createBasePayloads();
+    message.contractsName = object.contractsName?.map((e) => e) || [];
     message.data = object.data ?? new Uint8Array(0);
     return message;
   },
 };
 
 function createBaseMsgPublishPayloads(): MsgPublishPayloads {
-  return { identity: "", payloads: [] };
+  return { identity: "", payloads: undefined };
 }
 
 export const MsgPublishPayloads = {
@@ -146,8 +148,8 @@ export const MsgPublishPayloads = {
     if (message.identity !== "") {
       writer.uint32(10).string(message.identity);
     }
-    for (const v of message.payloads) {
-      Payload.encode(v!, writer.uint32(18).fork()).ldelim();
+    if (message.payloads !== undefined) {
+      Payloads.encode(message.payloads, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -171,7 +173,7 @@ export const MsgPublishPayloads = {
             break;
           }
 
-          message.payloads.push(Payload.decode(reader, reader.uint32()));
+          message.payloads = Payloads.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -185,7 +187,7 @@ export const MsgPublishPayloads = {
   fromJSON(object: any): MsgPublishPayloads {
     return {
       identity: isSet(object.identity) ? globalThis.String(object.identity) : "",
-      payloads: globalThis.Array.isArray(object?.payloads) ? object.payloads.map((e: any) => Payload.fromJSON(e)) : [],
+      payloads: isSet(object.payloads) ? Payloads.fromJSON(object.payloads) : undefined,
     };
   },
 
@@ -194,8 +196,8 @@ export const MsgPublishPayloads = {
     if (message.identity !== "") {
       obj.identity = message.identity;
     }
-    if (message.payloads?.length) {
-      obj.payloads = message.payloads.map((e) => Payload.toJSON(e));
+    if (message.payloads !== undefined) {
+      obj.payloads = Payloads.toJSON(message.payloads);
     }
     return obj;
   },
@@ -206,7 +208,9 @@ export const MsgPublishPayloads = {
   fromPartial<I extends Exact<DeepPartial<MsgPublishPayloads>, I>>(object: I): MsgPublishPayloads {
     const message = createBaseMsgPublishPayloads();
     message.identity = object.identity ?? "";
-    message.payloads = object.payloads?.map((e) => Payload.fromPartial(e)) || [];
+    message.payloads = (object.payloads !== undefined && object.payloads !== null)
+      ? Payloads.fromPartial(object.payloads)
+      : undefined;
     return message;
   },
 };

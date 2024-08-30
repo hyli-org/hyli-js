@@ -21,11 +21,11 @@ export class Erc20Parser {
     }
 
     consumePayload(msg: MsgPublishPayloads, hash: string) {
-        msg.payloads.forEach((payload) => {
-            if (payload.contractName !== this.contractName) return;
+        msg.payloads?.contractsName.forEach((contractName) => {
+            if (contractName !== this.contractName) return;
             // TODO: check identity
             // Parse payload data as ascii
-            const parsed = new TextDecoder().decode(payload.data);
+            const parsed = new TextDecoder().decode(msg.payloads?.data);
             const felts = parsed.slice(1, -1).split(" ");
             const fromSize = parseInt(felts[0]);
             const from = deserByteArray(felts.slice(0, fromSize + 3));
@@ -45,10 +45,10 @@ export class Erc20Parser {
 
     settleTx(hash: string, success: boolean) {
         const msg = this.pendingTxs[hash];
-        msg.payloads.forEach((payload) => {
-            if (payload.contractName !== this.contractName) return;
+        msg.payloads?.contractsName.forEach((contractName) => {
+            if (contractName !== this.contractName) return;
             // Parse payload data as ascii
-            const parsed = new TextDecoder().decode(payload.data);
+            const parsed = new TextDecoder().decode(msg.payloads?.data);
             const felts = parsed.slice(1, -1).split(" ");
             // First item is array length, ignore
             const fromSize = parseInt(felts[0]);

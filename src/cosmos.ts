@@ -66,13 +66,13 @@ export async function broadcastProofTx(hash: string, payloadIndex: number, contr
     return await client.broadcastTx(Uint8Array.from(TxRaw.encode(signedTx).finish()));
 }
 
-export async function broadcastPayloadTx(identity: string, payloads: { contractName: string; data: string }[]) {
+export async function broadcastPayloadTx(payloadTx: {identity: string, payloads: { contractsName: string[]; data: string }}) {
+    let cosmosCompatiblePayloadTxValue = structuredClone(payloadTx);
+    cosmosCompatiblePayloadTxValue.payloads.data = window.btoa(cosmosCompatiblePayloadTxValue.payloads.data)
+    
     const msgAny = {
         typeUrl: "/hyle.zktx.v1.MsgPublishPayloads",
-        value: {
-            identity,
-            payloads,
-        },
+        value: cosmosCompatiblePayloadTxValue,
     };
     const fee = {
         amount: [

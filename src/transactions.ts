@@ -76,7 +76,7 @@ export class TransactionsStore {
             // There's no need to wait for registration events
             if (this.transactionData[txHash].status === "sequenced") this.transactionData[txHash].status = "success";
         } else if (this.transactionData[txHash].type === "/hyle.zktx.v1.MsgPublishPayloads") {
-            this.transactionData[txHash].contracts = (parsed as MsgPublishPayloads).payloads.map((x) => x.contractName);
+            this.transactionData[txHash].contracts = (parsed as MsgPublishPayloads).payloads?.contractsName as string[];
         } else {
             // There's no need to wait in general
             if (this.transactionData[txHash].status === "sequenced") this.transactionData[txHash].status = "success";

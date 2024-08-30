@@ -1,9 +1,9 @@
 import * as _m0 from "protobufjs/minimal";
 export declare const protobufPackage = "hyle.zktx.v1";
-/** Payload is a blob */
-export interface Payload {
+/** Payloads is the blob */
+export interface Payloads {
     /** Name of target contract */
-    contractName: string;
+    contractsName: string[];
     /** Payload data */
     data: Uint8Array;
 }
@@ -11,8 +11,8 @@ export interface Payload {
 export interface MsgPublishPayloads {
     /** Identity is the identity of the TX sender */
     identity: string;
-    /** list of payloads */
-    payloads: Payload[];
+    /** Payload containing data and list of contrats */
+    payloads: Payloads | undefined;
 }
 /** No response */
 export interface MsgPublishPayloadsResponse {
@@ -47,25 +47,25 @@ export interface MsgRegisterContract {
 /** Register a contract - response type */
 export interface MsgRegisterContractResponse {
 }
-export declare const Payload: {
-    encode(message: Payload, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): Payload;
-    fromJSON(object: any): Payload;
-    toJSON(message: Payload): unknown;
+export declare const Payloads: {
+    encode(message: Payloads, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): Payloads;
+    fromJSON(object: any): Payloads;
+    toJSON(message: Payloads): unknown;
     create<I extends {
-        contractName?: string | undefined;
+        contractsName?: string[] | undefined;
         data?: Uint8Array | undefined;
     } & {
-        contractName?: string | undefined;
+        contractsName?: (string[] & string[] & { [K in Exclude<keyof I["contractsName"], keyof string[]>]: never; }) | undefined;
         data?: Uint8Array | undefined;
-    } & { [K in Exclude<keyof I, keyof Payload>]: never; }>(base?: I): Payload;
+    } & { [K_1 in Exclude<keyof I, keyof Payloads>]: never; }>(base?: I): Payloads;
     fromPartial<I_1 extends {
-        contractName?: string | undefined;
+        contractsName?: string[] | undefined;
         data?: Uint8Array | undefined;
     } & {
-        contractName?: string | undefined;
+        contractsName?: (string[] & string[] & { [K_2 in Exclude<keyof I_1["contractsName"], keyof string[]>]: never; }) | undefined;
         data?: Uint8Array | undefined;
-    } & { [K_1 in Exclude<keyof I_1, keyof Payload>]: never; }>(object: I_1): Payload;
+    } & { [K_3 in Exclude<keyof I_1, keyof Payloads>]: never; }>(object: I_1): Payloads;
 };
 export declare const MsgPublishPayloads: {
     encode(message: MsgPublishPayloads, writer?: _m0.Writer): _m0.Writer;
@@ -75,46 +75,34 @@ export declare const MsgPublishPayloads: {
     create<I extends {
         identity?: string | undefined;
         payloads?: {
-            contractName?: string | undefined;
+            contractsName?: string[] | undefined;
             data?: Uint8Array | undefined;
-        }[] | undefined;
+        } | undefined;
     } & {
         identity?: string | undefined;
         payloads?: ({
-            contractName?: string | undefined;
-            data?: Uint8Array | undefined;
-        }[] & ({
-            contractName?: string | undefined;
+            contractsName?: string[] | undefined;
             data?: Uint8Array | undefined;
         } & {
-            contractName?: string | undefined;
+            contractsName?: (string[] & string[] & { [K in Exclude<keyof I["payloads"]["contractsName"], keyof string[]>]: never; }) | undefined;
             data?: Uint8Array | undefined;
-        } & { [K in Exclude<keyof I["payloads"][number], keyof Payload>]: never; })[] & { [K_1 in Exclude<keyof I["payloads"], keyof {
-            contractName?: string | undefined;
-            data?: Uint8Array | undefined;
-        }[]>]: never; }) | undefined;
+        } & { [K_1 in Exclude<keyof I["payloads"], keyof Payloads>]: never; }) | undefined;
     } & { [K_2 in Exclude<keyof I, keyof MsgPublishPayloads>]: never; }>(base?: I): MsgPublishPayloads;
     fromPartial<I_1 extends {
         identity?: string | undefined;
         payloads?: {
-            contractName?: string | undefined;
+            contractsName?: string[] | undefined;
             data?: Uint8Array | undefined;
-        }[] | undefined;
+        } | undefined;
     } & {
         identity?: string | undefined;
         payloads?: ({
-            contractName?: string | undefined;
-            data?: Uint8Array | undefined;
-        }[] & ({
-            contractName?: string | undefined;
+            contractsName?: string[] | undefined;
             data?: Uint8Array | undefined;
         } & {
-            contractName?: string | undefined;
+            contractsName?: (string[] & string[] & { [K_3 in Exclude<keyof I_1["payloads"]["contractsName"], keyof string[]>]: never; }) | undefined;
             data?: Uint8Array | undefined;
-        } & { [K_3 in Exclude<keyof I_1["payloads"][number], keyof Payload>]: never; })[] & { [K_4 in Exclude<keyof I_1["payloads"], keyof {
-            contractName?: string | undefined;
-            data?: Uint8Array | undefined;
-        }[]>]: never; }) | undefined;
+        } & { [K_4 in Exclude<keyof I_1["payloads"], keyof Payloads>]: never; }) | undefined;
     } & { [K_5 in Exclude<keyof I_1, keyof MsgPublishPayloads>]: never; }>(object: I_1): MsgPublishPayloads;
 };
 export declare const MsgPublishPayloadsResponse: {
