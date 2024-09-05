@@ -26,7 +26,7 @@ export class Erc20Parser {
             // TODO: check identity
             // Parse payload data as ascii
             const parsed = new TextDecoder().decode(payload.data);
-            const felts = parsed.slice(1, -1).split(" ");
+            const felts = parsed.split(" ").slice(1); // First item is the number of item in the array, skip it.
             const fromSize = parseInt(felts[0]);
             const from = deserByteArray(felts.slice(0, fromSize + 3));
             const toSize = parseInt(felts[3 + fromSize]);
@@ -49,7 +49,7 @@ export class Erc20Parser {
             if (payload.contractName !== this.contractName) return;
             // Parse payload data as ascii
             const parsed = new TextDecoder().decode(payload.data);
-            const felts = parsed.slice(1, -1).split(" ");
+            const felts = parsed.split(" ").slice(1); // First item is the number of item in the array, skip it.
             // First item is array length, ignore
             const fromSize = parseInt(felts[0]);
             const from = deserByteArray(felts.slice(0, fromSize + 3));
