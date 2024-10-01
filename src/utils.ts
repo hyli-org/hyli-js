@@ -33,3 +33,11 @@ export function base64ToUint8Array(base64: string): Uint8Array {
     }
     return bytes;
 }
+
+export function uint8ArrayToHex(tx_hash: number[]): string {
+    return tx_hash.map((x) => x.toString(16).padStart(2, "0")).join("");
+}
+
+export function uint8ArrayToAscii(array: Uint8Array): string {
+    return new TextDecoder().decode(array);
+}

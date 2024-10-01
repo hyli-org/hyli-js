@@ -23,7 +23,7 @@ export class BlockStore {
     async loadBlockData(blockIdentifier: string) {
         if (this.blockData[blockIdentifier]) return;
 
-        const response = await fetch(`${getNetworkApiUrl(this.network)}/v1/history/block/${blockIdentifier}`);
+        const response = await fetch(`${getNetworkApiUrl(this.network)}/v1/indexer/block/${blockIdentifier}`);
         const data = await response.json();
         console.log("block", blockIdentifier, data);
         let hashes = data.txs.map((x: any) => x.hash);
@@ -36,7 +36,7 @@ export class BlockStore {
     }
 
     async loadBlocks() {
-        const response = await fetch(`${getNetworkApiUrl(this.network)}/v1/history/blocks`);
+        const response = await fetch(`${getNetworkApiUrl(this.network)}/v1/indexer/blocks`);
         this.blocks = (await response.json()).reverse();
 
         const client = await WebSocketConnection.connect(`${getNetworkWebsocketUrl(this.network)}`);
