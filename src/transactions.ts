@@ -47,4 +47,23 @@ export class TransactionsStore {
             console.error(`Error fetching transactions: ${error}`);
         }
     }
+
+    addListerOnContract(contractName: string) {
+        const socket = new WebSocket(
+            `${getNetworkApiUrl(this.network)}/v1/indexer/blobs/transactions/contract/${contractName}/ws`
+        );
+
+        socket.addEventListener("message", (tx) => {
+            const newTx = JSON.parse(tx.data);
+            this.blobTransactions.push({
+                txHash: newTx.tx_hash,
+                identity: newTx.identity,
+                transactionStatus: newTx.transaction_status,
+                blobs: newTx.blobs.map((blob: any) => ({
+                    contractName: blob.contract_name,
+                    data: blob.data,
+                })),
+            });
+        });
+    }
 }
