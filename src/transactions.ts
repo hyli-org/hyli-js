@@ -48,7 +48,7 @@ export class TransactionsStore {
         }
     }
 
-    addListerOnContract(contractName: string) {
+    addListenerOnContract(contractName: string) {
         const socket = new WebSocket(
             `${getNetworkApiUrl(this.network)}/v1/indexer/blobs/transactions/contract/${contractName}/ws`
         );
