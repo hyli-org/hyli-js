@@ -27,7 +27,7 @@ export class TransactionsStore {
     async loadBlobTxsLinkedWithContract(contractName: string): Promise<void> {
         try {
             const response = await fetch(
-                `${getNetworkApiUrl(this.network)}/v1/indexer/blobs/transactions/contract/${contractName}`
+                `${getNetworkApiUrl(this.network)}/v1/indexer/blob_transactions/contract/${contractName}`
             );
             if (!response.ok) {
                 return;
@@ -50,7 +50,7 @@ export class TransactionsStore {
 
     addListenerOnContract(contractName: string) {
         const socket = new WebSocket(
-            `${getNetworkApiUrl(this.network)}/v1/indexer/blobs/transactions/contract/${contractName}/ws`
+            `${getNetworkApiUrl(this.network)}/v1/indexer/blob_transactions/contract/${contractName}/ws`
         );
 
         socket.addEventListener("message", (tx) => {
