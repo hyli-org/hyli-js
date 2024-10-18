@@ -55,6 +55,9 @@ export class TransactionsStore {
 
         socket.addEventListener("message", (tx) => {
             const newTx = JSON.parse(tx.data);
+            if (this.blobTransactions.some((tx) => tx.txHash === newTx.tx_hash)) {
+                return;
+            }
             this.blobTransactions.push({
                 txHash: newTx.tx_hash,
                 identity: newTx.identity,
