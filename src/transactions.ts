@@ -48,7 +48,7 @@ export class TransactionsStore {
         }
     }
 
-    addListenerOnContract(contractName: string) {
+    addListenerOnContract(contractName: string, callback?: (tx: BlobTxInfo) => void): void {
         const socket = new WebSocket(
             `${getNetworkApiUrl(this.network)}/v1/indexer/blob_transactions/contract/${contractName}/ws`
         );
@@ -57,6 +57,17 @@ export class TransactionsStore {
             const newTx = JSON.parse(tx.data);
             if (this.blobTransactions.some((tx) => tx.txHash === newTx.tx_hash)) {
                 return;
+            }
+            if (callback) {
+                callback({
+                    txHash: newTx.tx_hash,
+                    identity: newTx.identity,
+                    transactionStatus: newTx.transaction_status,
+                    blobs: newTx.blobs.map((blob: any) => ({
+                        contractName: blob.contract_name,
+                        data: blob.data,
+                    })),
+                });
             }
             this.blobTransactions.push({
                 txHash: newTx.tx_hash,
