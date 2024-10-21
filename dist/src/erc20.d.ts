@@ -1,14 +1,13 @@
-import { MsgPublishPayloads } from "./proto/tx";
-import { TransactionInfo } from "./transactions";
+import { BlobTxInfo, Blob } from "./transactions";
 export declare class Erc20Parser {
     contractName: string;
     balancesSettled: Record<string, number>;
     balancesPending: Record<string, number>;
-    pendingPerAccount: Record<string, string[]>;
-    pendingTxs: Record<string, MsgPublishPayloads>;
-    constructor(contractName?: string);
-    consumeTx(tx: TransactionInfo): void;
-    consumePayload(msg: MsgPublishPayloads, hash: string): void;
-    settleTx(hash: string, success: boolean): void;
+    pendingTxs: Record<string, BlobTxInfo>;
+    constructor(contractName?: string, initialState?: Record<string, number>);
+    consumeTx(tx: BlobTxInfo): void;
+    processBlobs(txBlobs: Blob[], status: "Sequenced" | "Success"): void;
+    settleTx(txHash: string, success: boolean): void;
+    removePendingTx(txHash: string): void;
 }
 //# sourceMappingURL=erc20.d.ts.map
