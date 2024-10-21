@@ -41,7 +41,7 @@ export const getNetworkApiUrl = (network: string) => {
 
 export const getNetworkWebsocketUrl = (network: string) => {
     return {
-        localhost: "ws://localhost:4321/websocket",
-        devnet: "wss://rpc.devnet.hyle.eu/websocket",
+        localhost: "ws://localhost:4321",
+        devnet: "wss://rpc.devnet.hyle.eu",
     }[network];
 };
