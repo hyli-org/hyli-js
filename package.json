@@ -1,19 +1,32 @@
 {
-  "name": "hyle-js",
+  "name": "hyle",
   "version": "0.1.0",
   "license": "MIT",
-  "description": "Hyle SDK Js",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "type": "commonjs",
+  "description": "Hyle js/ts SDK",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist",
     "src"
   ],
   "scripts": {
-    "build": "bun build src/index.ts --target=browser --outdir=dist && tsc"
+    "build": "rm -rf dist && tsc",
+    "watch": "./watch.sh"
   },
-  "dependencies": {},
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./model": {
+      "import": "./dist/model/index.js",
+      "types": "./dist/model/index.d.ts"
+    }
+  },
+  "dependencies": {
+    "borsher": "^3.6.0"
+  },
   "devDependencies": {
     "@types/bun": "^1.1.6"
   }
