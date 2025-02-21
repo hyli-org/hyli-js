@@ -1,27 +1,20 @@
 {
   "name": "hyle-js",
-  "private": true,
-  "version": "0.0.4",
-  "type": "module",
-  "main": "./src/lib.ts",
-  "exports": {
-    ".": {
-      "default": "./dist/lib.js",
-      "types": "./dist/src/lib.d.ts"
-    }
-  },
+  "version": "0.1.0",
+  "license": "MIT",
+  "description": "Hyle SDK Js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "commonjs",
   "files": [
     "dist",
     "src"
   ],
   "scripts": {
-    "build": "bun build src/lib.ts --target=browser --outdir=dist && tsc && tsc-alias"
+    "build": "bun build src/index.ts --target=browser --outdir=dist && tsc"
   },
-  "dependencies": {
-    "@vue/reactivity": "^3.4.35"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@types/bun": "^1.1.6",
-    "tsc-alias": "^1.8.10"
+    "@types/bun": "^1.1.6"
   }
 }
