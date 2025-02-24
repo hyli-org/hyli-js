@@ -2,6 +2,7 @@
   "name": "hyle",
   "version": "0.1.1",
   "license": "MIT",
+  "repository": "Hyle-org/hyle-js",
   "description": "Hyle js/ts SDK",
   "type": "module",
   "main": "dist/index.js",
@@ -11,7 +12,8 @@
   ],
   "scripts": {
     "build": "rm -rf dist && tsc",
-    "watch": "./watch.sh"
+    "watch": "./watch.sh",
+    "publish": "np --no-tests"
   },
   "exports": {
     ".": {
