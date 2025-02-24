@@ -27,6 +27,7 @@
     "borsher": "^3.6.0"
   },
   "devDependencies": {
-    "@types/bun": "^1.1.6"
+    "@types/bun": "^1.1.6",
+    "np": "^10.2.0"
   }
 }
