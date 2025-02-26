@@ -1,4 +1,4 @@
-import { borshSerialize, BorshSchema } from "borsher";
+import { borshSerialize, BorshSchema, borshDeserialize } from "borsher";
 import { Blob } from "@/model/hyle";
 
 export const mmidContractName = "mmid";
@@ -53,6 +53,9 @@ export const verifyIdentity = (nonce: number, signature: string): Blob => {
 
 const serializeIdentityAction = (action: IdentityAction): number[] => {
     return Array.from(borshSerialize(schema, action));
+};
+export const deserializeIdentityAction = (data: number[]): IdentityAction => {
+    return borshDeserialize(schema, Buffer.from(data));
 };
 
 const schema = BorshSchema.Enum({
