@@ -17,7 +17,7 @@ export interface BlobTransaction {
     blobs: Blob[];
 }
 
-export interface TxEvent {
+export interface TransactionEvent {
     block_hash: string;
     block_height: number;
     events: { metadata: object; name: string }[];
@@ -126,4 +126,12 @@ export interface APIBlob {
 export interface ProofTransaction {
     contract_name: ContractName;
     proof: number[];
+}
+export interface TransactionEvent {
+    block_hash: string;
+    block_height: number;
+    events: {
+        metadata: object;
+        name: string;
+    }[];
 }

@@ -13,6 +13,7 @@ import {
     NodeInfo,
     ProofTransaction,
     TransactionWithBlobs,
+    TransactionEvent,
     TxHash,
 } from "./model";
 
@@ -130,8 +131,12 @@ export class IndexerApiHttpClient {
         return this.get(`v1/indexer/transactions/contract/${contractName}`, `getting transactions for contract ${contractName}`);
     }
 
-    async getTransactionWithHash(txHash: TxHash): Promise<APITransaction> {
-        return this.get(`v1/indexer/transaction/hash/${txHash}`, `getting transaction with hash ${txHash}`);
+    async getTransaction(txHash: TxHash): Promise<APITransaction> {
+        return this.get(`v1/indexer/transaction/hash/${txHash}`, `getting transaction ${txHash}`);
+    }
+
+    async getTransactionEvents(txHash: TxHash): Promise<TransactionEvent> {
+        return this.get(`v1/indexer/transaction/hash/${txHash}/events`, `getting transaction events for ${txHash}`);
     }
 
     async getBlobTransactionsByContract(contractName: ContractName): Promise<TransactionWithBlobs[]> {
