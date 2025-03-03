@@ -1,4 +1,4 @@
-import { borshSerialize, BorshSchema } from "borsher";
+import { borshSerialize, BorshSchema, borshDeserialize } from "borsher";
 import { ContractName, Blob, StructuredBlobData, structuredBlobDataSchema } from "./hyle";
 
 //
@@ -75,6 +75,9 @@ export const transfer = (recipient: string, token: ContractName, amount: number,
 
 export const serializeERC20Action = (action: StructuredBlobData<ERC20Action>): number[] => {
     return Array.from(borshSerialize(structuredBlobDataSchema(erc20Schema), action));
+};
+export const deserializeERC20Action = (data: number[]): StructuredBlobData<ERC20Action> => {
+    return borshDeserialize(structuredBlobDataSchema(erc20Schema), Buffer.from(data));
 };
 
 export const erc20Schema = BorshSchema.Enum({

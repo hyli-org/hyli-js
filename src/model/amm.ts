@@ -1,4 +1,4 @@
-import { borshSerialize, BorshSchema } from "borsher";
+import { borshSerialize, BorshSchema, borshDeserialize } from "borsher";
 import { ContractName, Blob } from "./hyle";
 import { BlobIndex, StructuredBlobData, structuredBlobDataSchema } from "./hyle";
 import * as token from "./token";
@@ -75,6 +75,9 @@ export function swap(account: string, fromToken: string, toToken: string, amount
 
 export const serializeAmmAction = (action: StructuredBlobData<AmmAction>): number[] => {
     return Array.from(borshSerialize(structuredBlobDataSchema(ammSchema), action));
+};
+export const deserializeAmmAction = (data: number[]): StructuredBlobData<AmmAction> => {
+    return borshDeserialize(structuredBlobDataSchema(ammSchema), Buffer.from(data));
 };
 
 const ammSchema = BorshSchema.Enum({

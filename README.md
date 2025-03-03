@@ -27,6 +27,13 @@ const blobTx: BlobTransaction = {
 };
 ```
 
+You have a usage example of the http clients in `test.ts` you can run with 
+
+```sh 
+bun test.ts
+```
+
+
 ## Build
 
 ```sh 
