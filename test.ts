@@ -21,7 +21,7 @@ assert.equal(consensus.round_leader, info.pubkey, "Round leader should be the sa
 
 const hyllar = await node.getContract("hyllar");
 assert.equal(hyllar.name, "hyllar", "Hyllar Contract name should be hyllar");
-assert.equal(hyllar.verifier, "risc0", "Hyllar verifier should be risc0");
+assert.equal(hyllar.verifier, "risc0-1", "Hyllar verifier should be risc0");
 
 const height = await node.getBlockHeight();
 assert.ok(height > 0, "Block height should be greater than 0");
@@ -47,7 +47,7 @@ const genesis_block = await indexer.getBlockByHeight(0);
 const genesis_txs = await indexer.getTransactionsByHeight(0);
 
 for (const gtx of genesis_txs) {
-    const tx = await indexer.getTransactionWithHash(gtx.tx_hash);
+    const tx = await indexer.getTransaction(gtx.tx_hash);
     console.log("Genesis tx: ", tx.tx_hash);
     assert.equal(tx.tx_hash, gtx.tx_hash, "Transaction hash should be the same");
     assert.equal(tx.block_hash, genesis_block.hash, "Transaction block hash should be the genesis block hash");
