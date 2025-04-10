@@ -77,7 +77,7 @@ export const serializeERC20Action = (action: StructuredBlobData<ERC20Action>): n
     return Array.from(borshSerialize(structuredBlobDataSchema(erc20Schema), action));
 };
 export const deserializeERC20Action = (data: number[]): StructuredBlobData<ERC20Action> => {
-    return borshDeserialize(structuredBlobDataSchema(erc20Schema), Buffer.from(data));
+    return borshDeserialize(structuredBlobDataSchema(erc20Schema), new Uint8Array(data));
 };
 
 export const erc20Schema = BorshSchema.Enum({

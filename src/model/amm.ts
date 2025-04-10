@@ -77,7 +77,7 @@ export const serializeAmmAction = (action: StructuredBlobData<AmmAction>): numbe
     return Array.from(borshSerialize(structuredBlobDataSchema(ammSchema), action));
 };
 export const deserializeAmmAction = (data: number[]): StructuredBlobData<AmmAction> => {
-    return borshDeserialize(structuredBlobDataSchema(ammSchema), Buffer.from(data));
+    return borshDeserialize(structuredBlobDataSchema(ammSchema), new Uint8Array(data));
 };
 
 const ammSchema = BorshSchema.Enum({

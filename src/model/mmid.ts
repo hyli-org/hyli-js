@@ -55,7 +55,7 @@ const serializeIdentityAction = (action: IdentityAction): number[] => {
     return Array.from(borshSerialize(schema, action));
 };
 export const deserializeIdentityAction = (data: number[]): IdentityAction => {
-    return borshDeserialize(schema, Buffer.from(data));
+    return borshDeserialize(schema, new Uint8Array(data));
 };
 
 const schema = BorshSchema.Enum({

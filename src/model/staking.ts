@@ -41,7 +41,7 @@ export const serializeStakingAction = (action: StructuredBlobData<StakingAction>
 };
 
 export const deserializeStakingAction = (data: number[]): StakingAction => {
-    return borshDeserialize(structuredBlobDataSchema(stakingSchema), Buffer.from(data));
+    return borshDeserialize(structuredBlobDataSchema(stakingSchema), new Uint8Array(data));
 };
 
 export const stakingSchema = BorshSchema.Enum({
