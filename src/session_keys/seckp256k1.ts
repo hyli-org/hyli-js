@@ -5,26 +5,26 @@ import { createSecp256k1Blob } from "@/model/seckp256k1";
 import { hexToUint8Array, Storage } from "@/utils";
 
 export class AuthService {
+    private privateKey: string | null = null;
     private sessionKey: string | null = null;
-    private publicKey: string | null = null;
     private ec: ec;
+    private privateKeyStorageKey: string;
     private sessionKeyStorageKey: string;
-    private publicKeyStorageKey: string;
     private storage: Storage;
 
     constructor(
         storage: Storage = localStorage,
-        sessionKeyStorageKey: string = "hyle_session_key",
-        publicKeyStorageKey: string = "hyle_public_key",
+        sessionKeyStorageKey: string = "hyle_session_private_key",
+        publicKeyStorageKey: string = "hyle_session_key",
     ) {
         this.ec = new ec("secp256k1");
         this.storage = storage;
-        this.sessionKeyStorageKey = sessionKeyStorageKey;
-        this.publicKeyStorageKey = publicKeyStorageKey;
+        this.privateKeyStorageKey = sessionKeyStorageKey;
+        this.sessionKeyStorageKey = publicKeyStorageKey;
 
         // Retrieve the sessionKey and publicKey from storage
+        this.privateKey = this.storage.getItem(this.privateKeyStorageKey);
         this.sessionKey = this.storage.getItem(this.sessionKeyStorageKey);
-        this.publicKey = this.storage.getItem(this.publicKeyStorageKey);
     }
 
     generateSessionKey(): string {
@@ -33,31 +33,31 @@ export class AuthService {
         if (!privateKey) {
             throw new Error("Failed to generate private key");
         }
-        this.sessionKey = privateKey;
+        this.privateKey = privateKey;
 
         const publicKey = keyPair.getPublic("hex");
         if (!publicKey) {
             throw new Error("Failed to generate public key");
         }
-        this.publicKey = publicKey;
+        this.sessionKey = publicKey;
 
         // Save to storage
+        this.storage.setItem(this.privateKeyStorageKey, this.privateKey);
         this.storage.setItem(this.sessionKeyStorageKey, this.sessionKey);
-        this.storage.setItem(this.publicKeyStorageKey, this.publicKey);
-        return this.publicKey;
+        return this.sessionKey;
     }
 
     getSessionKey(): string | null {
-        return this.publicKey;
+        return this.sessionKey;
     }
 
     signMessage(message: string | lib.WordArray): ec.Signature {
-        if (!this.sessionKey) {
+        if (!this.privateKey) {
             throw new Error("No session key available");
         }
 
         const hash = SHA256(message);
-        const keyPair = this.ec.keyFromPrivate(this.sessionKey);
+        const keyPair = this.ec.keyFromPrivate(this.privateKey);
         const signature = keyPair.sign(hash.toString());
 
         const n = this.ec.curve.n;
@@ -70,12 +70,12 @@ export class AuthService {
     }
 
     signMessageAsBlob(identity: string, message: string | lib.WordArray): Blob {
-        if (!this.sessionKey) {
+        if (!this.privateKey) {
             throw new Error("No session key available");
         }
 
         const msg = hexToUint8Array(SHA256(message).toString(enc.Hex));
-        const keyPair = this.ec.keyFromPrivate(this.sessionKey);
+        const keyPair = this.ec.keyFromPrivate(this.privateKey);
         const publicKey = keyPair.getPublic(true, "array");
         const signature = toCompact(this.signMessage(message));
 
@@ -83,10 +83,10 @@ export class AuthService {
     }
 
     clearSession() {
+        this.privateKey = null;
         this.sessionKey = null;
-        this.publicKey = null;
+        this.storage.removeItem(this.privateKeyStorageKey);
         this.storage.removeItem(this.sessionKeyStorageKey);
-        this.storage.removeItem(this.publicKeyStorageKey);
     }
 }
 

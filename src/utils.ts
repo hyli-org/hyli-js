@@ -4,7 +4,7 @@ export interface Storage {
     removeItem(key: string): void;
 }
 
-// Drop-in replacemont for localStorage
+// Drop-in replacement for localStorage
 export class InMemoryStorage implements Storage {
     private store: Record<string, string> = {};
 
