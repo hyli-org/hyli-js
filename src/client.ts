@@ -53,7 +53,7 @@ export class NodeApiHttpClient {
         return this.get(`v1/contract/${contractName}`, `getting contract ${contractName}`);
     }
 
-    private async get<T>(endpoint: string, contextMsg: string): Promise<T> {
+    async get<T>(endpoint: string, contextMsg: string): Promise<T> {
         const response = await fetch(`${this.url.toString()}${endpoint}`, {
             method: "GET",
             headers: { "Content-Type": "application/json" },
@@ -66,7 +66,7 @@ export class NodeApiHttpClient {
         return response.json();
     }
 
-    private async post<T, R>(endpoint: string, body: T, contextMsg: string): Promise<R> {
+    async post<T, R>(endpoint: string, body: T, contextMsg: string): Promise<R> {
         const response = await fetch(`${this.url.toString()}${endpoint}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -150,7 +150,7 @@ export class IndexerApiHttpClient {
         return this.get(`v1/indexer/blob/hash/${txHash}/index/${blobIndex}`, `getting blob with hash ${txHash} and index ${blobIndex}`);
     }
 
-    private async get<T>(endpoint: string, contextMsg: string): Promise<T> {
+    async get<T>(endpoint: string, contextMsg: string): Promise<T> {
         const response = await fetch(`${this.url.toString()}${endpoint}`, {
             method: "GET",
             headers: { "Content-Type": "application/json" },

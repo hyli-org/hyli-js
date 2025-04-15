@@ -13,7 +13,7 @@
   "scripts": {
     "build": "rm -rf dist && tsc",
     "watch": "./watch.sh",
-    "publish": "rm -rf dist && tsc && np --no-tests"
+    "pub": "rm -rf dist && tsc && np --no-tests"
   },
   "exports": {
     ".": {
