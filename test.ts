@@ -9,8 +9,8 @@ import { deserializeAmmAction } from "./src/model/amm";
 import { deserializeIdentityAction } from "./src/model/mmid";
 import { deserializeStakingAction } from "./src/model/staking";
 
-var node = new NodeApiHttpClient("https://rest-api.devnet.hyle.eu");
-var indexer = new IndexerApiHttpClient("https://rest-api.devnet.hyle.eu");
+var node = new NodeApiHttpClient("https://rest-api.devnet.hyli.org");
+var indexer = new IndexerApiHttpClient("https://rest-api.devnet.hyli.org");
 
 const info = await node.getNodeInfo();
 console.log(info);

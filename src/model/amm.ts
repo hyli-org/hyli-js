@@ -1,6 +1,6 @@
 import { borshSerialize, BorshSchema, borshDeserialize } from "borsher";
-import { ContractName, Blob } from "./hyle";
-import { BlobIndex, StructuredBlobData, structuredBlobDataSchema } from "./hyle";
+import { ContractName, Blob } from "./hyli";
+import { BlobIndex, StructuredBlobData, structuredBlobDataSchema } from "./hyli";
 import * as token from "./token";
 
 //

@@ -1,5 +1,5 @@
 import { borshSerialize, BorshSchema, borshDeserialize } from "borsher";
-import { Blob } from "@/model/hyle";
+import { Blob } from "@/model/hyli";
 
 export const mmidContractName = "mmid";
 

@@ -1,5 +1,5 @@
 import { borshSerialize, BorshSchema, borshDeserialize } from "borsher";
-import { ContractName, Blob, StructuredBlobData, structuredBlobDataSchema } from "./hyle";
+import { ContractName, Blob, StructuredBlobData, structuredBlobDataSchema } from "./hyli";
 
 //
 // Types

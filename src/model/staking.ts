@@ -3,7 +3,7 @@
 //
 
 import { borshDeserialize, BorshSchema, borshSerialize } from "borsher";
-import { StructuredBlobData, structuredBlobDataSchema } from "./hyle";
+import { StructuredBlobData, structuredBlobDataSchema } from "./hyli";
 
 export type StakingAction =
     | {

@@ -1,9 +1,9 @@
-# Hyle js SDK
+# Hyli js SDK
 
 ## Usage
 
 ```ts
-import { Blob, blob_builder, BlobTransaction } from "hyle";
+import { Blob, blob_builder, BlobTransaction } from "hyli";
 
 const transfer: Blob = blob_builder.token.transfer("alice@mmid", "usdc", 4, null);
 
@@ -48,5 +48,5 @@ bun link
 And in your project run:
 
 ```sh
-bun link hyle
+bun link hyli
 ```
