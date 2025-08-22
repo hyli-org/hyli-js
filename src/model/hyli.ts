@@ -125,6 +125,8 @@ export interface APIBlob {
 }
 export interface ProofTransaction {
     contract_name: ContractName;
+    program_id: number[];
+    verifier: string;
     proof: number[];
 }
 export interface TransactionEvent {

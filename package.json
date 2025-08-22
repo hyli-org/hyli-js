@@ -1,35 +1,35 @@
 {
-  "name": "hyli",
-  "version": "0.3.0",
-  "license": "MIT",
-  "repository": "Hyli-org/hyli-js",
-  "description": "Hyli js/ts SDK",
-  "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "build": "rm -rf dist && tsc",
-    "watch": "./watch.sh",
-    "pub": "rm -rf dist && tsc && np --no-tests"
-  },
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+    "name": "hyli",
+    "version": "0.3.0",
+    "license": "MIT",
+    "repository": "Hyli-org/hyli-js",
+    "description": "Hyli js/ts SDK",
+    "type": "module",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "rm -rf dist && tsc",
+        "watch": "./watch.sh",
+        "pub": "rm -rf dist && tsc && np --no-tests"
     },
-    "./model": {
-      "import": "./dist/model/index.js",
-      "types": "./dist/model/index.d.ts"
+    "exports": {
+        ".": {
+            "import": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        },
+        "./model": {
+            "import": "./dist/model/index.js",
+            "types": "./dist/model/index.d.ts"
+        }
+    },
+    "dependencies": {
+        "borsher": "^3.6.0"
+    },
+    "devDependencies": {
+        "@types/bun": "^1.1.6",
+        "np": "^10.2.0"
     }
-  },
-  "dependencies": {
-    "borsher": "^3.6.0"
-  },
-  "devDependencies": {
-    "@types/bun": "^1.1.6",
-    "np": "^10.2.0"
-  }
 }

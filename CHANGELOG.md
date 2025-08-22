@@ -1,3 +1,7 @@
+## 0.4.0
+
+-   Updated sendProofTx to the latest version
+
 ## 0.0.4
 
 -   Fix ERC20 parsing for new payloads.
